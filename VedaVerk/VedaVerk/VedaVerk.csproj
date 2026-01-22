@@ -17,4 +17,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Models\" />
+    <Folder Include="Repositiories\Interfaces\" />
+    <Folder Include="Repositiories\Implementations\" />
+  </ItemGroup>
+
 </Project>
