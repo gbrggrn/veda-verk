@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using VedaVerk.Shared.Enums;
 
-namespace VedaVerk.Shared
+namespace VedaVerk.Shared.DTOs
 {
-	public class ResponseProductDTO
+	public class EditProductDTO
 	{
 		public string? Name { get; set; }
 		public string? Description { get; set; }

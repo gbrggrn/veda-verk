@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using VedaVerk.Models.Enitites;
 using VedaVerk.Repositiories.Interfaces;
 using VedaVerk.Shared;
+using VedaVerk.Shared.DTOs;
 
 namespace VedaVerk.Controllers
 {
