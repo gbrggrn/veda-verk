@@ -13,11 +13,15 @@ namespace VedaVerk.Models.Enitites
 		// Customer details
 		[Required] public string CustomerName { get; set; } = string.Empty;
 		[Required] public string CustomerEmail { get; set; } = string.Empty;
+		[Required] public string CustomerPhone { get; set; } = string.Empty;
 
 		// Status
 		public bool IsCancelled { get; set; }
 
 		// Foreign key
 		public int ProductId { get; set; }
+
+		// Secret token for cancellation
+		public Guid SecretToken { get; set; } = Guid.NewGuid();
 	}
 }
