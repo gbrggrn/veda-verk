@@ -16,7 +16,7 @@ namespace VedaVerk.Repositiories.Implementations
 			_dbSet = _context.Set<T>();
 		}
 
-		public async Task AddSync(T entity)
+		public async Task AddAsync(T entity)
 		{
 			ArgumentNullException.ThrowIfNull(entity);
 

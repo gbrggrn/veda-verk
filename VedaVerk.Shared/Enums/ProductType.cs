@@ -1,4 +1,4 @@
-﻿namespace VedaVerk.Models.Enums
+﻿namespace VedaVerk.Shared.Enums
 {
 	public enum ProductType
 	{

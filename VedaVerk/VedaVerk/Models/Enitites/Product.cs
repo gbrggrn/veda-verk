@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using VedaVerk.Models.Enums;
+using VedaVerk.Shared.Enums;
 
 namespace VedaVerk.Models.Enitites
 {
