@@ -8,65 +8,65 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
-<div class="container-fluid p-0">
-    <main>
+<div class="page d-flex flex-column min-vh-100">
+    <div class="main flex-grow-1">
         @Body
-    </main>
-</div>
-
-<!-- Footer -->
-<div class="site-footer text-center mt-5 pb-4">
-    <div class="container">
-
-        <!-- Social Links -->
-        <div class="social-links mb-3">
-
-            <!-- Github -->
-            <a href="http://github.com/gbrggrn" target="_blank" class="social-icon mx-2">
-                <i class="bi bi-github display-6 fs-2"></i>
-            </a>
-
-            <!-- Instagram -->
-            <a href="http://instagram.com/veda.verk" class="social-icon mx-2">
-                <i class="bi bi-instagram display-6 fs-2"></i>
-            </a>
-
-            <!-- Mailto -->
-            <a href="mailto:your.email@example.com" class="social-icon mx-2">
-				<i class="bi bi-envelope-fill display-6 fs-2"></i>
-            </a>
-        </div>
-        
-        <!-- Footer nav -->
-        <div class="footer-nav mb-3 d-flex justify-content-center gap-3 flex-wrap">
-            <NavLink href="" class="text-dark text-decoration-none">Home</NavLink>
-			<NavLink href="" class="text-dark text-decoration-none">About</NavLink>
-			<NavLink href="" class="text-dark text-decoration-none">Contact</NavLink>
-
-            <AuthorizeView>
-                <Authorized>
-                    <NavLink href="admin/dashboard" class="text-dark text-decoration-none">Dashboard</NavLink> 
-                    <form action="Account/Logout" method="post" class="d-inline">
-                        <AntiforgeryToken/>
-                        <input type="hidden" name="ReturnUrl" value=""/>
-                        <button type="submit" class="text-dark text-decoration-none bg-transparent border-0 p-0">
-                            Logout
-                        </button>
-                    </form>
-                </Authorized>
-                <NotAuthorized>
-					<a href="Account/Login" class="text-dark text-decoration-none">Login</a>
-                </NotAuthorized>
-            </AuthorizeView>
-
-        </div>
-
-        <!-- Date -->
-        <div class="text-muted small">
-			&copy; @DateTime.Now.Year Veda Verk
-        </div>
     </div>
 
+    <!-- Footer -->
+    <div class="site-footer text-center mt-5 pb-4">
+        <div class="container">
+
+            <!-- Social Links -->
+            <div class="social-links mb-3">
+
+                <!-- Github -->
+                <a href="http://github.com/gbrggrn" target="_blank" class="social-icon mx-2">
+                    <i class="bi bi-github display-6 fs-2"></i>
+                </a>
+
+                <!-- Instagram -->
+                <a href="http://instagram.com/veda.verk" class="social-icon mx-2">
+                    <i class="bi bi-instagram display-6 fs-2"></i>
+                </a>
+
+                <!-- Mailto -->
+                <a href="mailto:your.email@example.com" class="social-icon mx-2">
+                    <i class="bi bi-envelope-fill display-6 fs-2"></i>
+                </a>
+            </div>
+
+            <!-- Footer nav -->
+            <div class="footer-nav mb-3 d-flex justify-content-center gap-3 flex-wrap">
+                <NavLink href="" class="text-dark text-decoration-none">Home</NavLink>
+                <NavLink href="" class="text-dark text-decoration-none">About</NavLink>
+                <NavLink href="" class="text-dark text-decoration-none">Contact</NavLink>
+
+                <AuthorizeView>
+                    <Authorized>
+                        <NavLink href="admin/dashboard" class="text-dark text-decoration-none">Dashboard</NavLink>
+                        <form action="Account/Logout" method="post" class="d-inline">
+                            <AntiforgeryToken />
+                            <input type="hidden" name="ReturnUrl" value="" />
+                            <button type="submit" class="text-dark text-decoration-none bg-transparent border-0 p-0">
+                                Logout
+                            </button>
+                        </form>
+                    </Authorized>
+                    <NotAuthorized>
+                        <a href="Account/Login" class="text-dark text-decoration-none">Login</a>
+                    </NotAuthorized>
+                </AuthorizeView>
+
+            </div>
+
+            <!-- Date -->
+            <div class="text-muted small">
+                &copy; @DateTime.Now.Year Veda Verk
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <div id="blazor-error-ui">

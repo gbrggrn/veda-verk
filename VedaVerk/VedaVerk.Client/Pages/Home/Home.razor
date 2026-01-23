@@ -5,14 +5,15 @@
 <PageTitle>Veda Verk | Trädgård</PageTitle>
 
 <!-- Hero -->
-<div class="hero-section d-flex align-items-center justify-content-center text-center">
-	<div class="content-overlay">
+<div class="hero-section d-flex align-items-start justify-content-center text-center">
+	<div class="content-overlay mt-5">
 		<h1 class="display-2 fw-bold text-white">Veda Verk</h1>
-		<p class="lead text-white text-shadow fs-4">Grönsaker • Pizza • Kurser</p>
+		<p class="lead fw-normal text-white text-shadow">Grönsakskassar • Kurser • Pizza</p>
+		<p class="lead fw-normal text-white text-shadow">Här kan du boka upphämtning av en grönsakskasse eller pizza (vid utvalda tillfällen). Under sommarhalvåret går det även att boka matlagningskurser utomhus (3-6p).</p>
 	</div>
 </div>
 
-<div class="container mt-5">
+<div class="container overlap-container">
 	<div class="row g-4">
 
 		<div class="col-md-4">
@@ -95,15 +96,28 @@
 
 <style>
 	.hero-section {
-		height: 70vh;
+		height: 60vh;
 		width: 100%;
 
-		background: linear-gradient(to bottom, rgba(255,255,255,0) 60%, rgba(255,255,255,1) 100%),
+		background: linear-gradient(to bottom, rgba(255,255,255,0) 60%, rgba(255,255,255,1) 90%),
 		url('images/hero.jpg');
 
 		background-size: cover;
 		background-position: center;
 		background-repeat: no-repeat;
+		background-color:white;
+
+		position: relative;
+		z-index: 1;
+
+		box-shadow: inset 0 -1px 0 white;
+	}
+
+	.overlap-container {
+		transform: translateY(-15%);
+
+		position: relative;
+		z-index: 2;
 	}
 
 	.text-shadow {
@@ -117,6 +131,8 @@
 		transition: transform 0.3s ease;
 		border-radius: 10px;
 		height: 250px;
+		background-color: white;
+		box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 	}
 
 	.category-card:hover{
