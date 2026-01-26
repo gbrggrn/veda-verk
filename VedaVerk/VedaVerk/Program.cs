@@ -12,7 +12,7 @@ namespace VedaVerk
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -91,7 +91,70 @@ namespace VedaVerk
 					context.SaveChanges();
 				}
 			}
-            //!!! End seed test data
+			//!!! End seed test data
+
+			// -----------------------------------------------------------------------------
+			// SECURE ADMIN SEEDER
+			// -----------------------------------------------------------------------------
+			using (var scope = app.Services.CreateScope())
+			{
+				var services = scope.ServiceProvider;
+				try
+				{
+					// 1. Get the password from Configuration (User Secrets or Env Vars)
+					var adminPassword = app.Configuration["Seed:AdminPassword"];
+
+					// Only run if a password is configured
+					if (!string.IsNullOrEmpty(adminPassword))
+					{
+						var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+						var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+						var adminEmail = "admin@vedaverk.se";
+
+						// 2. Ensure Admin Role Exists
+						if (!await roleManager.RoleExistsAsync("Admin"))
+						{
+							await roleManager.CreateAsync(new IdentityRole("Admin"));
+						}
+
+						// 3. Create Admin User if Missing
+						if (await userManager.FindByEmailAsync(adminEmail) == null)
+						{
+							var adminUser = new ApplicationUser
+							{
+								UserName = adminEmail,
+								Email = adminEmail,
+								EmailConfirmed = true
+							};
+
+							var result = await userManager.CreateAsync(adminUser, adminPassword);
+
+							if (result.Succeeded)
+							{
+								await userManager.AddToRoleAsync(adminUser, "Admin");
+								Console.WriteLine("Admin user seeded successfully.");
+							}
+							else
+							{
+								// Log errors to console so you know why it failed (e.g. password too weak)
+								foreach (var error in result.Errors)
+								{
+									Console.WriteLine($"Seeding Failed: {error.Description}");
+								}
+							}
+						}
+					}
+					else
+					{
+						Console.WriteLine("Skipping Admin Seeding: 'Seed:AdminPassword' not found.");
+					}
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine($"An error occurred while seeding the database: {ex.Message}");
+				}
+			}
+			// -----------------------------------------------------------------------------
 
 			app.Run();
         }
