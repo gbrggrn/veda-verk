@@ -1,0 +1,163 @@
+﻿@using System.Globalization
+@inject IBookingService BookingService
+@inject IJSRuntime JS
+
+@if (isVisible)
+{
+    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+
+                <div class="modal-header bg-light flex-column align-items-stretch">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h5 class="modal-title">@currentProduct?.Name</h5>
+                        <button type="button" class="btn-close" @onclick="Close"></button>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3 bg-white p-2 rounded border">
+
+                        <button class="btn btn-sm btn-outline-secondary" @onclick="PreviousWeek">
+                            <i class="bi bi-chevron-left"></i> Föregående
+                        </button>
+
+                        <div class="text-center">
+                            <span class="fw-bold d-block">Vecka @GetWeekNumber(currentDate)</span>
+                            <small class="text-muted">
+                                @GetMonday(currentDate).ToString("dd MMM") - @GetSunday(currentDate).ToString("dd MMM")
+                            </small>
+                        </div>
+
+                        <button class="btn btn-sm btn-outline-secondary" @onclick="NextWeek">
+                            Nästa <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="mt-2 text-center">
+                        <span class="badge bg-info text-dark">
+                            Totalt denna vecka: @bookings.Sum(b => b.Quantity) st
+                        </span>
+                    </div>
+                </div>
+
+                <div class="modal-body p-0">
+                    @if (isLoading)
+                    {
+                        <div class="p-5 text-center text-muted">Laddar bokningar...</div>
+                    }
+                    else if (!bookings.Any())
+                    {
+                        <div class="p-5 text-center text-muted">Inga bokningar hittades för denna produkt.</div>
+                    }
+                    else
+                    {
+                        <table class="table table-striped table-hover mb-0">
+                            <thead class="table-light sticky-top">
+                                <tr>
+                                    <th>Tid</th>
+                                    <th>Namn</th>
+                                    <th>Email</th>
+                                    <th>Antal</th>
+                                    <th class="text-end">Åtgärd</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var booking in bookings.OrderBy(b => b.BookingTime))
+                                {
+                                    <tr>
+                                        <td class="fw-bold">@booking.BookingTime.ToString(@"hh\:mm")</td>
+                                        <td>@booking.CustomerName</td>
+                                        <td><a href="mailto:@booking.CustomerEmail">@booking.CustomerEmail</a></td>
+                                        <td>
+                                            <span class="badge bg-secondary">@booking.Quantity st</span>
+                                        </td>
+                                        <td class="text-end">
+                                            <button class="btn btn-sm btn-outline-danger"
+                                                    @onclick="() => DeleteBooking(booking)">
+                                                <i class="bi bi-trash"></i> Makulera
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="Close">Stäng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isVisible = false;
+    private bool isLoading = false;
+    private ResponseProductDTO? currentProduct;
+    private List<ResponseBookingDTO> bookings = new();
+    private DateTime currentDate = DateTime.Today;
+
+    private async Task PreviousWeek()
+    {
+        currentDate = currentDate.AddDays(-7);
+        await LoadBookings();
+    }
+
+    private async Task NextWeek()
+    {
+        currentDate = currentDate.AddDays(7);
+        await LoadBookings();
+    }
+
+    private int GetWeekNumber(DateTime date)
+    {
+        return ISOWeek.GetWeekOfYear(date);
+    }
+
+    private DateTime GetMonday(DateTime date)
+    {
+        int diff = (7 + (date.DayOfWeek - DayOfWeek.Monday)) % 7;
+        return date.AddDays(-1 * diff).Date;
+    }
+
+    private DateTime GetSunday(DateTime date) => GetMonday(date).AddDays(6);
+
+    public async Task Open(ResponseProductDTO product)
+    {
+        currentProduct = product;
+        isVisible = true;
+        await LoadBookings();
+    }
+
+    private void Close()
+    {
+        isVisible = false;
+        bookings.Clear();
+    }
+
+    private async Task LoadBookings()
+    {
+        if (currentProduct == null) return;
+
+        isLoading = true;
+        var start = GetMonday(currentDate);
+        var end = GetSunday(currentDate);
+
+		bookings = await BookingService.GetBookingsByRange(currentProduct.Id, start, end);
+
+        isLoading = false;
+    }
+
+    private async Task DeleteBooking(ResponseBookingDTO booking)
+    {
+        bool confirmed = await JS.InvokeAsync<bool>("confirm",
+            $"Är du säker på att du vill makulera bokningen för {booking.CustomerName}?");
+
+        if (confirmed)
+        {
+            await BookingService.Delete(booking.Id);
+            await LoadBookings(); // Refresh list
+        }
+    }
+}

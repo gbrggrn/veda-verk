@@ -16,5 +16,6 @@ namespace VedaVerk.Shared.DTOs
 		public int Capacity { get; set; }
 		public string? ImageUrl { get; set; }
 		public ProductType Type { get; set; }
+		public bool IsActive { get; set; }
 	}
 }

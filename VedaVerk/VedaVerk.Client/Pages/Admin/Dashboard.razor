@@ -1,5 +1,121 @@
-﻿<h3>Dashboard</h3>
+﻿@page "/admin/dashboard"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+@inject IProductService ProductService
+@inject IJSRuntime JS
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Admin Dashboard</h1>
+        <button class="btn btn-success" @onclick="() => OpenFormModal(null)">
+            <i class="bi bi-plus-lg"></i> Skapa Ny Produkt
+        </button>
+    </div>
+
+    <h4 class="mb-3 text-primary">Just Nu</h4>
+    <div class="row g-4 mb-5">
+        @foreach (var product in ActiveProducts)
+        {
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-primary">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between">
+                        <span class="fw-bold">@product.Type</span>
+                        <span class="badge bg-white text-primary">Aktiv</span>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text text-muted">@product.Description.Substring(0, Math.Min(50, product.Description.Length))...</p>
+                        
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary" @onclick="() => OpenDetailsModal(product)">
+                                <i class="bi bi-calendar-check"></i> Hantera Bokningar
+                            </button>
+                            <button class="btn btn-sm btn-light text-muted" @onclick="() => OpenFormModal(product)">
+                                <i class="bi bi-pencil"></i> Redigera Info
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <h4 class="mb-3">Historik & Arkiv</h4>
+    
+    <ul class="nav nav-tabs" id="historyTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-courses" type="button">Kurser</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-vegbags" type="button">VegKassar</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-pizza" type="button">Pizza</button>
+        </li>
+    </ul>
+
+    <div class="tab-content border border-top-0 p-3 bg-white">
+        <div class="tab-pane fade show active" id="tab-courses">
+            <ProductHistoryTable Products="CourseHistory" OnEdit="OpenFormModal" OnDelete="DeleteProduct" />
+        </div>
+        
+        <div class="tab-pane fade" id="tab-vegbags">
+            <ProductHistoryTable Products="VegBagHistory" OnEdit="OpenFormModal" OnDelete="DeleteProduct" />
+        </div>
+
+        <div class="tab-pane fade" id="tab-pizza">
+            <ProductHistoryTable Products="PizzaHistory" OnEdit="OpenFormModal" OnDelete="DeleteProduct" />
+        </div>
+    </div>
+</div>
+
+<ProductFormModal @ref="formModal" OnSaved="ReloadData" />
+<ProductDetailsModal @ref="detailsModal" />
 
 @code {
+    private List<ResponseProductDTO> ActiveProducts = new();
+    private List<ResponseProductDTO> CourseHistory = new();
+    private List<ResponseProductDTO> VegBagHistory = new();
+    private List<ResponseProductDTO> PizzaHistory = new();
 
+    private ProductFormModal formModal;
+    private ProductDetailsModal detailsModal;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ReloadData();
+    }
+
+    private async Task ReloadData()
+    {
+        var allProducts = await ProductService.GetAll(); // Fetch everything
+        
+        // Filter logic (assuming you have 'IsActive' and 'Category' properties)
+        ActiveProducts = allProducts.Where(p => p.IsActive).ToList();
+        
+        var history = allProducts.Where(p => !p.IsActive).ToList();
+        CourseHistory = history.Where(p => p.Type == ProductType.Course).ToList();
+        VegBagHistory = history.Where(p => p.Type == ProductType.VegBag).ToList();
+        PizzaHistory = history.Where(p => p.Type == ProductType.Pizza).ToList();
+    }
+
+    private void OpenFormModal(ResponseProductDTO? product)
+    {
+        formModal.Open(product); // Pass null for Create, Product for Edit
+    }
+
+    private void OpenDetailsModal(ResponseProductDTO product)
+    {
+        detailsModal.Open(product);
+    }
+
+    private async Task DeleteProduct(int id)
+    {
+        bool confirmed = await JS.InvokeAsync<bool>("confirm", "Är du säker på att du vill radera denna produkt?");
+        if (confirmed)
+        {
+            await ProductService.Delete(id);
+            await ReloadData();
+        }
+    }
 }

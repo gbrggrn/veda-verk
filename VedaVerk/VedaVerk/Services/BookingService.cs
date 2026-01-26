@@ -31,5 +31,48 @@ namespace VedaVerk.Services
 
 			return result;
 		}
+
+		public async Task<List<ResponseBookingDTO>> GetBookingsForProductAsync(int productId)
+		{
+			var bookings = await _bookingsRepository.GetAllAsync();
+			var result = bookings
+				.Where(b => b.ProductId == productId)
+				.Select(b => new ResponseBookingDTO
+				{
+					Id = b.Id,
+					BookingDate = b.BookingDate,
+					ProductId = b.ProductId,
+					CustomerName = b.CustomerName,
+					CustomerEmail = b.CustomerEmail,
+					CustomerPhone = b.CustomerPhone,
+					Quantity = b.Quantity
+				})
+				.ToList();
+
+			return result;
+		}
+
+		public async Task<List<ResponseBookingDTO>> GetBookingsByRangeAsync(int productId, DateTime start, DateTime end)
+		{
+			var allBookings = await _bookingsRepository.GetAllAsync();
+			var bookings = allBookings.Where(b => b.ProductId == productId &&
+												  b.BookingDate.Date >= start.Date &&
+												  b.BookingDate.Date <= end.Date)
+				.OrderBy(b => b.BookingDate)
+				.ThenBy(b => b.BookingTime)
+				.Select(b => new ResponseBookingDTO
+				{
+					Id = b.Id,
+					BookingDate = b.BookingDate,
+					ProductId = b.ProductId,
+					CustomerName = b.CustomerName,
+					CustomerEmail = b.CustomerEmail,
+					CustomerPhone = b.CustomerPhone,
+					Quantity = b.Quantity
+				})
+				.ToList();
+
+			return bookings;
+		}
 	}
 }

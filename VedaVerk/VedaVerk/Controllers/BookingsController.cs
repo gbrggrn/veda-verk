@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using VedaVerk.Client.Services.Implementations;
 using VedaVerk.Models.Enitites;
 using VedaVerk.Repositiories.Interfaces;
 using VedaVerk.Shared;
 using VedaVerk.Shared.DTOs;
+using VedaVerk.Services;
 
 namespace VedaVerk.Controllers
 {
@@ -23,9 +23,27 @@ namespace VedaVerk.Controllers
 		[HttpGet("slots/{productId}")]
 		public async Task<ActionResult<List<TimeSlotDTO>>> GetSlots(int productId, [FromQuery] DateTime date)
 		{
-			var slots = await _bookingService.GetAvailableSlotsAsync(productId, date);
+			var slots = await _bookingService.GetSlotsAsync(productId, date);
 
 			return Ok(slots);
+		}
+
+		[HttpGet("bookings-for-product/{productId}")]
+		[Authorize(Roles = "Admin")]
+		public async Task<ActionResult<List<ResponseBookingDTO>>> GetBookingsForProduct(int productId)
+		{
+			return Ok(await _bookingService.GetBookingsForProductAsync(productId) ?? []);
+		}
+
+		[HttpGet("bookings-by-range/{productId}")]
+		[Authorize(Roles = "Admin")]
+		public async Task<ActionResult<List<ResponseBookingDTO>>> GetBookingsByRange(
+			int productId, 
+			[FromQuery] DateTime start, 
+			[FromQuery] DateTime end)
+		{
+			var bookings = await _bookingService.GetBookingsByRangeAsync(productId, start, end);
+			return Ok(bookings);
 		}
 
 		[HttpPost]

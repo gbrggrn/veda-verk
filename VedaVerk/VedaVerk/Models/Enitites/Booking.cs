@@ -9,6 +9,7 @@ namespace VedaVerk.Models.Enitites
 		// Booking details
 		[Required] public DateTime BookingDate { get; set; }
 		[Required] public Product? Product { get; set; }
+		[Required] public int Quantity { get; set; }
 
 		// Pickup time
 		[Required] public TimeSpan BookingTime { get; set; }
