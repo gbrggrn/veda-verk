@@ -12,7 +12,7 @@ namespace VedaVerk.Models.Enitites
 		[Required] public int Quantity { get; set; }
 
 		// Pickup time
-		[Required] public TimeSpan BookingTime { get; set; }
+		[Required] public DateTime BookingTime { get; set; }
 
 		// Customer details
 		[Required] public string CustomerName { get; set; } = string.Empty;

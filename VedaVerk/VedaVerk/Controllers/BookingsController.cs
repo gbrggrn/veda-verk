@@ -58,7 +58,7 @@ namespace VedaVerk.Controllers
 
 			var booking = new Booking
 			{
-				BookingDate = dto.BookingDate,
+				BookingDate = dto.BookingDate!.Value,
 				ProductId = dto.ProductId,
 				CustomerName = dto.CustomerName ?? string.Empty,
 				CustomerEmail = dto.CustomerEmail ?? string.Empty,

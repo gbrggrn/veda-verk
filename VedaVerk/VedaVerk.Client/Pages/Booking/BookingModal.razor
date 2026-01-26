@@ -3,70 +3,122 @@
 @if (Product != null)
 {
     <div class="modal show d-block animate-fade-in" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog modal-lg animate-zoom-in">
+        <div class="modal-dialog modal-xl animate-zoom-in">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Boka @Product.Name</h5>
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title fw-bold">Boka upplevelse</h5>
                     <button type="button" class="btn-close" @onclick="OnClose"></button>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body pt-0">
                     <EditForm Model="bookingModel" OnValidSubmit="HandleBooking">
                         <DataAnnotationsValidator />
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <BookingCard Product="Product" />
+                        <div class="row g-4">
+
+                            <div class="col-md-5 col-lg-4">
+                                <div class="card bg-light border-0 h-100">
+                                    @if (!string.IsNullOrEmpty(Product.ImageUrl))
+                                    {
+                                        <img src="@Product.ImageUrl" class="card-img-top" style="height: 150px; object-fit: cover;" alt="@Product.Name">
+                                    }
+                                    <div class="card-body">
+                                        <h4 class="card-title text-primary mb-3">@Product.Name</h4>
+                                        <p class="card-text text-muted small">@Product.Description</p>
+
+                                        <hr class="my-3" />
+
+                                        <div class="mb-3">
+                                            <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Valt Datum</small>
+                                            <div class="fs-5">@bookingModel.BookingDate?.ToString("yyyy-MM-dd" ?? "-")</div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <small class="text-uppercase text-muted fw-bold" style="font-size: 0.75rem;">Vald Tid</small>
+                                            <div class="fs-5 fw-bold @(bookingModel.BookingTime.HasValue ? "text-success" : "text-muted fst-italic")">
+                                                @(bookingModel.BookingTime.HasValue? bookingModel.BookingTime.Value.ToString("HH:mm") : "-")
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                                            <span class="fw-bold">Pris totalt:</span>
+                                            <span class="fs-4 fw-bold">@Product.Price kr</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-7 col-lg-8">
+                                <div class="p-2">
+                                    <h6 class="mb-3 fw-bold">1. Välj Datum & Tid</h6>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Ditt Namn</label>
-                                    <InputText @bind-Value="bookingModel.CustomerName" class="form-control" placeholder="Anna Andersson" />
-                                </div>
+                                    <div class="mb-3">
+                                        <input type="date" class="form-control"
+                                               value="@selectedDate.ToString("yyyy-MM-dd")"
+                                               @onchange="OnDateChanged" />
+                                    </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Email</label>
-                                    <InputText @bind-Value="bookingModel.CustomerEmail" class="form-control" placeholder="anna@example.com" />
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label">Antal</label>
-                                    <InputNumber @bind-Value="bookingModel.Quantity" class="form-control" />
-                                </div>
-
-                                <input type="date" value="@selectedDate.ToString("yyyy-MM-dd")" @onchange="OnDateChanged" />
-
-                                <div class="d-flex flex-wrap gap-2 mt-3">
-                                    @if (availableSlots == null)
-                                    {
-                                        <p>Laddar...</p>
-                                    }
-                                    else
-                                    {
-                                        @foreach (var slot in availableSlots)
+                                    <div class="mb-4">
+                                        @if (availableSlots == null)
                                         {
-                                            <button type="button"
-                                                    class="btn @GetButtonClass(slot) m-1"
-                                                    disabled="@(!slot.IsAvailable)"
-                                                    @onclick="() => SelectSlot(slot)">
-
-                                                @slot.Time.ToString(@"hh\:mm")
-                                                <span class="badge bg-light text-dark ms-1">@slot.RemainingCapacity kvar</span>
-
-                                            </button>
+                                            <div class="spinner-border text-primary spinner-border-sm" role="status"></div>
+                                            <span class="ms-2">Laddar tider...</span>
                                         }
-                                    }
-                                </div>
+                                        else if (!availableSlots.Any())
+                                        {
+                                            <div class="alert alert-warning py-2">Inga tider tillgängliga detta datum.</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex flex-wrap gap-2">
+                                                @foreach (var slot in availableSlots)
+                                                {
+                                                    <button type="button"
+                                                            class="btn @GetButtonClass(slot) d-flex flex-column align-items-center py-2 px-3"
+                                                            style="min-width: 80px;"
+                                                            disabled="@(!slot.IsAvailable)"
+                                                            @onclick="() => SelectSlot(slot)">
 
-                                <div class="d-grid gap-2 mt-4">
-                                    <button type="submit" class="btn btn-success btn-lg">
-                                        Bekräfta Bokning
-                                    </button>
-                                </div>
+                                                        <span class="fw-bold">@slot.Time.ToString(@"hh\:mm")</span>
+                                                        <small style="font-size: 0.7rem;">
+                                                            @(slot.RemainingCapacity) kvar
+                                                        </small>
+                                                    </button>
+                                                }
+                                            </div>
+                                        }
+                                        <ValidationMessage For="@(() => bookingModel.BookingTime)" />
+                                    </div>
 
+                                    <h6 class="mb-3 fw-bold border-top pt-3">2. Dina Uppgifter</h6>
+
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted">Namn</label>
+                                            <InputText @bind-Value="bookingModel.CustomerName" class="form-control" placeholder="Förnamn Efternamn" />
+                                            <ValidationMessage For="@(() => bookingModel.CustomerName)" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted">Email</label>
+                                            <InputText @bind-Value="bookingModel.CustomerEmail" class="form-control" placeholder="namn@exempel.se" />
+                                            <ValidationMessage For="@(() => bookingModel.CustomerEmail)" />
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4" style="max-width: 150px;">
+                                        <label class="form-label small text-muted">Antal personer</label>
+                                        <InputNumber @bind-Value="bookingModel.Quantity" class="form-control" min="1" max="10" />
+                                        <ValidationMessage For="@(() => bookingModel.Quantity)" />
+                                    </div>
+
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-success btn-lg py-3 shadow-sm" disabled="@(bookingModel.BookingTime == null)">
+                                            Bekräfta Bokning
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </EditForm>
                 </div>
@@ -80,16 +132,23 @@
     [Parameter] public EventCallback OnClose { get; set; }
     private CreateBookingDTO bookingModel = new();
     private TimeSpan? SelectedTime { get; set; }
-    List<TimeSlotDTO> availableSlots;
+    List<TimeSlotDTO>? availableSlots;
     private DateTime selectedDate = DateTime.Today;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        await LoadSlots();
+        if (Product != null)
+        {
+            bookingModel.ProductId = Product.Id;
+            await LoadSlots();
+        }
     }
 
     private async Task LoadSlots()
     {
+        if (Product == null)
+            return;
+
         availableSlots = await BookingService.GetAvailableSlotsAsync(Product.Id, selectedDate);
     }
 
@@ -113,7 +172,7 @@
             return;
 
         SelectedTime = slot.Time;
-        bookingModel.BookingTime = slot.Time;
+        bookingModel.BookingTime = selectedDate.Date.Add(slot.Time);
     }
 
     protected override void OnParametersSet()

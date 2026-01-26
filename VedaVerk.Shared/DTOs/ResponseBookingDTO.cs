@@ -10,7 +10,7 @@ namespace VedaVerk.Shared.DTOs
 	{
 		public int Id { get; set; }
 		public DateTime BookingDate { get; set; }
-		public TimeSpan BookingTime { get; set; }
+		public DateTime BookingTime { get; set; }
 		public int ProductId { get; set; }
 		public string? CustomerName { get; set; }
 		public string? CustomerEmail { get; set; }
