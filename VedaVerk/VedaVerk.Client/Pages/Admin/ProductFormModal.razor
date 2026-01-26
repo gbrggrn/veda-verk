@@ -1,5 +1,180 @@
-﻿<h3>ProductFormModal</h3>
+﻿@inject IProductService ProductService
+
+@if (isVisible)
+{
+    <div class="modal show d-block" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@(model.Id == 0 ? "Skapa Ny Produkt" : "Redigera Produkt")</h5>
+                    <button type="button" class="btn-close" @onclick="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <EditForm Model="model" OnValidSubmit="HandleSubmit">
+                        <DataAnnotationsValidator />
+
+                        <h6 class="border-bottom pb-2 mb-3">Grundinformation</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Namn</label>
+                                <InputText @bind-Value="model.Name" class="form-control" placeholder="T.ex. Fredagspizza" />
+                                <ValidationMessage For="@(() => model.Name)" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Kategori</label>
+                                <InputSelect @bind-Value="model.Type" class="form-select">
+                                    @foreach (var type in Enum.GetValues<ProductType>())
+                                    {
+                                        <option value="@type">@type</option>
+                                    }
+                                </InputSelect>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Pris (kr)</label>
+                                <InputNumber @bind-Value="model.Price" class="form-control" />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Total Kapacitet (Lager)</label>
+                                <InputNumber @bind-Value="model.Capacity" class="form-control" />
+                                <small class="text-muted">Totalt antal per dag</small>
+                            </div>
+
+                            <div class="col-md-4 d-flex align-items-end">
+                                <div class="form-check form-switch mb-2">
+                                    <InputCheckbox @bind-Value="model.IsActive" class="form-check-input" id="activeSwitch" />
+                                    <label class="form-check-label" for="activeSwitch">Aktiv (Publicerad)</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Beskrivning</label>
+                                <InputTextArea @bind-Value="model.Description" class="form-control" rows="3" />
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Bild URL</label>
+                                <InputText @bind-Value="model.ImageUrl" class="form-control" placeholder="https://..." />
+                            </div>
+                        </div>
+
+                        <h6 class="border-bottom pb-2 mb-3 mt-4">Datum & Tillgänglighet</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Gäller Från</label>
+                                <InputDate @bind-Value="model.ActiveFrom" class="form-control" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Gäller Till</label>
+                                <InputDate @bind-Value="model.ActiveTo" class="form-control" />
+                            </div>
+                        </div>
+
+                        <h6 class="border-bottom pb-2 mb-3 mt-4 text-primary">Bokningsregler (Slots)</h6>
+                        <div class="row g-3 bg-light p-3 rounded">
+                            <div class="col-md-3">
+                                <label class="form-label">Öppnar</label>
+                                <input type="time" class="form-control" value="@model.OpenTime.ToString(@"hh\:mm")" @onchange="e => model.OpenTime = TimeSpan.Parse(e.Value.ToString())" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Stänger</label>
+                                <input type="time" class="form-control" value="@model.CloseTime.ToString(@"hh\:mm")" @onchange="e => model.CloseTime = TimeSpan.Parse(e.Value.ToString())" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Intervall (min)</label>
+                                <InputNumber @bind-Value="model.IntervalMinutes" class="form-control" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Platser / Slot</label>
+                                <InputNumber @bind-Value="model.CapacityPerSlot" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="modal-footer mt-4 px-0 pb-0">
+                            <button type="button" class="btn btn-secondary" @onclick="Close">Avbryt</button>
+                            <button type="submit" class="btn btn-success">
+                                @(model.Id == 0 ? "Skapa Produkt" : "Spara Ändringar")
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
+    [Parameter] public EventCallback OnSaved { get; set; }
 
+    private bool isVisible = false;
+    private ResponseProductDTO model = new();
+	private CreateProductDTO createModel = new();
+	private EditProductDTO editModel = new();
+
+    public void Open(ResponseProductDTO? product)
+    {
+        if (product == null)
+        {
+            // CREATE MODE: Set defaults
+            var createModel = new CreateProductDTO
+            {
+                ActiveFrom = DateTime.Today,
+                ActiveTo = DateTime.Today.AddMonths(3),
+                OpenTime = new TimeSpan(09, 00, 0),
+                CloseTime = new TimeSpan(18, 00, 0),
+                IntervalMinutes = 30,
+                Capacity = 100,
+                CapacityPerSlot = 5,
+                IsActive = true,
+                Type = ProductType.Pizza // Default
+            };
+        }
+        else
+        {
+            // EDIT MODE: Clone the object to avoid editing the list directly before save
+            var editModel = new EditProductDTO
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                Capacity = product.Capacity,
+                ImageUrl = product.ImageUrl,
+                Type = product.Type,
+                IsActive = product.IsActive,
+                OpenTime = product.OpenTime,
+                CloseTime = product.CloseTime,
+                IntervalMinutes = product.IntervalMinutes,
+                CapacityPerSlot = product.CapacityPerSlot,
+                ActiveFrom = product.ActiveFrom,
+                ActiveTo = product.ActiveTo
+            };
+        }
+
+        isVisible = true;
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        isVisible = false;
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (model.Id == 0)
+        {
+            await ProductService.Create(createModel);
+        }
+        else
+        {
+            await ProductService.Update(editModel.Id, editModel);
+        }
+
+        isVisible = false;
+        await OnSaved.InvokeAsync();
+    }
 }
