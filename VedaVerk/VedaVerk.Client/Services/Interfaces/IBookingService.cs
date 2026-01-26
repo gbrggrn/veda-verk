@@ -9,5 +9,6 @@ namespace VedaVerk.Client.Services.Interfaces
 		Task<bool> Delete(int id);
 		Task<List<TimeSlotDTO>> GetAvailableSlotsAsync(int productId, DateTime date);
 		Task<List<ResponseBookingDTO>> GetBookingsForProduct(int productId);
+		Task<List<ResponseBookingDTO>> GetBookingsByRange(int productId, DateTime start, DateTime end);
 	}
 }
