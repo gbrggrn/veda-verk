@@ -9,9 +9,9 @@ namespace VedaVerk.Client.Services.Implementations
 	{
 		private readonly HttpClient _httpClient = httpClient;
 
-		public Task<bool> CheckAvailability(int productId, int quantity)
+		public async Task<bool> CheckAvailability(int productId, int quantity)
 		{
-			throw new NotImplementedException();
+			return await _httpClient.GetFromJsonAsync<bool>($"/api/Products/availability/{productId}?quantity={quantity}");
 		}
 
 		[Authorize(Roles = "Admin")]

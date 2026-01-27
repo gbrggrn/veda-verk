@@ -7,18 +7,15 @@ using VedaVerk.Shared.DTOs;
 
 namespace VedaVerk.Controllers
 {
+	[Route("api/[controller]")]
+	[ApiController]
 	public class ProductsController(IRepository<Product> productsRepository) : Controller
 	{
 		private readonly IRepository<Product> _productsRepository = productsRepository;
 
-		public IActionResult Index()
-		{
-			return View();
-		}
-
-		[HttpGet]
+		[HttpGet("availability/{productId}")]
 		[AllowAnonymous]
-		public async Task<IActionResult> CheckAvailability(int productId, int quantity)
+		public async Task<IActionResult> CheckAvailability(int productId, [FromQuery] int quantity)
 		{
 			var product = await _productsRepository.GetByIdAsync(productId);
 			if (product == null)
@@ -34,6 +31,7 @@ namespace VedaVerk.Controllers
 		}
 
 		[HttpGet]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> GetAll()
 		{
 			var products = await _productsRepository.GetAllAsync();
@@ -67,7 +65,16 @@ namespace VedaVerk.Controllers
 				Price = dto.Price,
 				Capacity = dto.Capacity,
 				Type = dto.Type,
-				ImageUrl = dto.ImageUrl ?? string.Empty
+				ImageUrl = dto.ImageUrl ?? string.Empty,
+				IsActive = dto.IsActive,
+				OpenTime = dto.OpenTime,
+				CloseTime = dto.CloseTime,
+				IntervalMinutes = dto.IntervalMinutes,
+				CapacityPerSlot = dto.CapacityPerSlot,
+				Created = DateTime.UtcNow,
+				LastUpdated = DateTime.UtcNow,
+				ActiveFrom = dto.ActiveFrom,
+				ActiveTo = dto.ActiveTo
 			};
 
 			await _productsRepository.AddAsync(product);
@@ -108,20 +115,19 @@ namespace VedaVerk.Controllers
 			existingProduct.Capacity = dto.Capacity;
 			existingProduct.Type = dto.Type;
 			existingProduct.ImageUrl = dto.ImageUrl;
+			existingProduct.IsActive = dto.IsActive;
+			existingProduct.OpenTime = dto.OpenTime;
+			existingProduct.CloseTime = dto.CloseTime;
+			existingProduct.IntervalMinutes = dto.IntervalMinutes;
+			existingProduct.CapacityPerSlot = dto.CapacityPerSlot;
+			existingProduct.ActiveFrom = dto.ActiveFrom;
+			existingProduct.ActiveTo = dto.ActiveTo;
+			existingProduct.LastUpdated = DateTime.UtcNow;
+			existingProduct.Created = dto.Created;
 
 			await _productsRepository.UpdateAsync(existingProduct);
 
-			var responseDto = new ResponseProductDTO
-			{
-				Name = existingProduct.Name,
-				Description = existingProduct.Description,
-				Price = existingProduct.Price,
-				Capacity = existingProduct.Capacity,
-				Type = existingProduct.Type,
-				ImageUrl = existingProduct.ImageUrl
-			};
-
-			return Ok(responseDto);
+			return Ok("Updated successfully.");
 		}
 	}
 }

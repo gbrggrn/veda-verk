@@ -2,10 +2,13 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VedaVerk.Client.Pages;
+using VedaVerk.Services;
 using VedaVerk.Components;
 using VedaVerk.Components.Account;
 using VedaVerk.Data;
 using VedaVerk.Models.Enitites;
+using VedaVerk.Repositiories.Implementations;
+using VedaVerk.Repositiories.Interfaces;
 using VedaVerk.Shared.Enums;
 
 namespace VedaVerk
@@ -17,7 +20,8 @@ namespace VedaVerk
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddRazorComponents()
+			builder.Services.AddControllersWithViews();
+			builder.Services.AddRazorComponents()
                 .AddInteractiveWebAssemblyComponents();
 
             builder.Services.AddCascadingAuthenticationState();
@@ -25,7 +29,10 @@ namespace VedaVerk
             builder.Services.AddScoped<IdentityRedirectManager>();
             builder.Services.AddScoped<AuthenticationStateProvider, PersistingServerAuthenticationStateProvider>();
 
-            builder.Services.AddAuthorization();
+			builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+			builder.Services.AddScoped<BookingService>();
+
+			builder.Services.AddAuthorization();
             builder.Services.AddAuthentication(options =>
                 {
                     options.DefaultScheme = IdentityConstants.ApplicationScheme;
@@ -46,7 +53,7 @@ namespace VedaVerk
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-            var app = builder.Build();
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -66,7 +73,12 @@ namespace VedaVerk
             app.UseStaticFiles();
             app.UseAntiforgery();
 
-            app.MapRazorComponents<App>()
+			app.UseAuthentication();
+			app.UseAuthorization();
+
+			app.MapControllers();
+
+			app.MapRazorComponents<App>()
                 .AddInteractiveWebAssemblyRenderMode()
                 .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
 
@@ -83,11 +95,56 @@ namespace VedaVerk
 				if (!context.Products.Any())
 				{
 					context.Products.AddRange(new List<Product>
-		            {
-			            new Product { Name = "Höstkasse (Small)", Price = 250, Type = ProductType.VegBag },
-			            new Product { Name = "Höstkasse (Large)", Price = 450, Type = ProductType.VegBag },
-			            new Product { Name = "Pizza Friday", Price = 145, Type = ProductType.Pizza }
-		            });
+					{
+						new Product {
+							Name = "Höstkasse (Small)",
+							Price = 250,
+							Type = ProductType.VegBag,
+							Description = "Grönsaker",
+							Capacity = 50,
+							OpenTime = new TimeSpan(8, 0, 0),
+							CloseTime = new TimeSpan(18, 0, 0),
+							IntervalMinutes = 30,
+							CapacityPerSlot = 5,
+							IsActive = true,
+							Created = DateTime.UtcNow,
+							LastUpdated = DateTime.UtcNow,
+							ActiveFrom = DateTime.UtcNow,
+							ActiveTo = DateTime.UtcNow.AddDays(7)
+							},
+						new Product {
+							Name = "Matlagningskurs",
+							Price = 1250,
+							Type = ProductType.Course,
+							Description = "Kurs kurs!",
+							Capacity = 2,
+							OpenTime = new TimeSpan(8, 0, 0),
+							CloseTime = new TimeSpan(18, 0, 0),
+							IntervalMinutes = 30,
+							CapacityPerSlot = 2,
+							IsActive = true,
+							Created = DateTime.UtcNow,
+							LastUpdated = DateTime.UtcNow,
+							ActiveFrom = DateTime.UtcNow,
+							ActiveTo = DateTime.UtcNow.AddDays(7)
+						},
+						new Product {
+							Name = "Pizza-Fredag!",
+							Price = 145,
+							Type = ProductType.Pizza,
+							Description = "Goda pizzor!",
+							Capacity = 20,
+							OpenTime = new TimeSpan(8, 0, 0),
+							CloseTime = new TimeSpan(8, 0 ,0),
+							IntervalMinutes = 30,
+							CapacityPerSlot = 10,
+							IsActive = true,
+							Created = DateTime.UtcNow,
+							LastUpdated = DateTime.UtcNow,
+							ActiveFrom = DateTime.UtcNow,
+							ActiveTo = DateTime.UtcNow.AddDays(7)
+						}
+					});
 
 					context.SaveChanges();
 				}

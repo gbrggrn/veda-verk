@@ -73,7 +73,7 @@
                             </div>
                         </div>
 
-                        <h6 class="border-bottom pb-2 mb-3 mt-4 text-primary">Bokningsregler (Slots)</h6>
+                        <h6 class="border-bottom pb-2 mb-3 mt-4 text-primary">Bokningsregler</h6>
                         <div class="row g-3 bg-light p-3 rounded">
                             <div class="col-md-3">
                                 <label class="form-label">Öppnar</label>
@@ -110,32 +110,22 @@
     [Parameter] public EventCallback OnSaved { get; set; }
 
     private bool isVisible = false;
-    private ResponseProductDTO model = new();
-	private CreateProductDTO createModel = new();
-	private EditProductDTO editModel = new();
+    private bool isCreating = false;
+    private CreateProductDTO model = new();
+    private EditProductDTO editModel = new();
 
     public void Open(ResponseProductDTO? product)
     {
         if (product == null)
         {
+            isCreating = true;
             // CREATE MODE: Set defaults
-            var createModel = new CreateProductDTO
-            {
-                ActiveFrom = DateTime.Today,
-                ActiveTo = DateTime.Today.AddMonths(3),
-                OpenTime = new TimeSpan(09, 00, 0),
-                CloseTime = new TimeSpan(18, 00, 0),
-                IntervalMinutes = 30,
-                Capacity = 100,
-                CapacityPerSlot = 5,
-                IsActive = true,
-                Type = ProductType.Pizza // Default
-            };
+            model = new CreateProductDTO();
         }
         else
         {
             // EDIT MODE: Clone the object to avoid editing the list directly before save
-            var editModel = new EditProductDTO
+            editModel = new EditProductDTO
             {
                 Id = product.Id,
                 Name = product.Name,
@@ -152,6 +142,21 @@
                 ActiveFrom = product.ActiveFrom,
                 ActiveTo = product.ActiveTo
             };
+
+            model.Id = product.Id;
+            model.Name = product.Name;
+            model.Description = product.Description;
+            model.Price = product.Price;
+            model.Capacity = product.Capacity;
+            model.ImageUrl = product.ImageUrl;
+            model.Type = product.Type;
+            model.IsActive = product.IsActive;
+            model.OpenTime = product.OpenTime;
+            model.CloseTime = product.CloseTime;
+            model.IntervalMinutes = product.IntervalMinutes;
+            model.CapacityPerSlot = product.CapacityPerSlot;
+            model.ActiveFrom = product.ActiveFrom;
+            model.ActiveTo = product.ActiveTo;
         }
 
         isVisible = true;
@@ -165,12 +170,26 @@
 
     private async Task HandleSubmit()
     {
-        if (model.Id == 0)
+        if (isCreating == true)
         {
-            await ProductService.Create(createModel);
+            await ProductService.Create(model);
         }
         else
         {
+            editModel.Name = model.Name;
+            editModel.Description = model.Description;
+            editModel.Price = model.Price;
+            editModel.Capacity = model.Capacity;
+            editModel.ImageUrl = model.ImageUrl;
+            editModel.Type = model.Type;
+            editModel.IsActive = model.IsActive;
+            editModel.OpenTime = model.OpenTime;
+            editModel.CloseTime = model.CloseTime;
+            editModel.IntervalMinutes = model.IntervalMinutes;
+            editModel.CapacityPerSlot = model.CapacityPerSlot;
+            editModel.ActiveFrom = model.ActiveFrom;
+            editModel.ActiveTo = model.ActiveTo;
+
             await ProductService.Update(editModel.Id, editModel);
         }
 

@@ -9,6 +9,8 @@ using VedaVerk.Services;
 
 namespace VedaVerk.Controllers
 {
+	[Route("api/[controller]")]
+	[ApiController]
 	public class BookingsController(IRepository<Product> productsrepository, IRepository<Booking> bookingsRepository, BookingService bookingService) : Controller
 	{
 		private readonly IRepository<Product> _productsRepository = productsrepository;
