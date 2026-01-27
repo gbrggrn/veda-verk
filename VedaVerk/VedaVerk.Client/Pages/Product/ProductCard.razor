@@ -1,22 +1,32 @@
-﻿<h3>ProductCard</h3>
+﻿<div class="card h-100 shadow-sm border-0">
+    <div class="card-header bg-white border-0 pt-3">
+        <h5 class="card-title fw-bold text-primary mb-0">@Product.Name</h5>
+    </div>
 
-<div class="modal-header border-0">
-	<h5 class="modal-title">@Model.Name</h5>
-	<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-</div>
+    <div class="card-body">
+        @if (!string.IsNullOrWhiteSpace(Product.ImageUrl))
+        {
+            <img src="@Product.ImageUrl" class="img-fluid rounded mb-3 w-100"
+                 style="height: 150px; object-fit: cover;" alt="@Product.Name" />
+        }
+        <p class="small text-muted">@Product.Description</p>
+        <h4 class="text-dark">@Product.Price :-</h4>
+    </div>
 
-<div class="modal-body border-0">
-	<img src="@Model.ImageUrl" class="img-fluid rounded mb-3 w-100" alt="@Model.Name" />
-
-	<p class="lead">@Model.Description</p>
-
-	<h2>Pris: @Model.Price :-</h2>
-</div>
-
-<div class="modal-footer border-0">
-	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <div class="card-footer bg-white border-0 pb-3">
+        <button class="btn btn-primary w-100" @onclick="HandleClick">
+            Boka
+        </button>
+    </div>
 </div>
 
 @code {
-	[Parameter] public ResponseProductDTO Model { get; set; } = new();
+    [Parameter] public ResponseProductDTO Product { get; set; } = new();
+
+    [Parameter] public EventCallback<ResponseProductDTO> OnSelected { get; set; }
+
+    private async Task HandleClick()
+    {
+        await OnSelected.InvokeAsync(Product);
+    }
 }

@@ -14,7 +14,7 @@
                             @foreach (var p in Products)
                             {
                                 <div class="col-md-6">
-                                    <ProductCard Product="p" OnBook="() => HandleBook(p)" />
+                                    <ProductCard Product="p" OnSelected="() => HandleBook(p)" />
                                 </div>
                             }
                         </div>
@@ -30,15 +30,15 @@
 }
 
 @code {
-	[Parameter] public List<ResponseProductDTO> Products { get; set; } = new();
-	[Parameter] public string CategoryName { get; set; } = string.Empty;
-	[Parameter] public bool IsVisible { get; set; }
+    [Parameter] public List<ResponseProductDTO> Products { get; set; } = new();
+    [Parameter] public string CategoryName { get; set; } = string.Empty;
+    [Parameter] public bool IsVisible { get; set; }
 
-	[Parameter] public EventCallback OnClose { get; set; }
-	[Parameter] public EventCallback<ResponseProductDTO> OnProductSelected { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<ResponseProductDTO> OnProductSelected { get; set; }
 
-	private async Task HandleBook(ResponseProductDTO product)
-	{
-		await OnProductSelected.InvokeAsync(product);
-	}
+    private async Task HandleBook(ResponseProductDTO product)
+    {
+        await OnProductSelected.InvokeAsync(product);
+    }
 }

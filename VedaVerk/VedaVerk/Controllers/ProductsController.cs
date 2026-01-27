@@ -31,11 +31,31 @@ namespace VedaVerk.Controllers
 		}
 
 		[HttpGet]
-		[Authorize(Roles = "Admin")]
+		[AllowAnonymous]
 		public async Task<IActionResult> GetAll()
 		{
 			var products = await _productsRepository.GetAllAsync();
-			return Ok(products);
+			
+			var dtos = products.Select(p => new ResponseProductDTO {
+			 Id = p.Id,
+			 Name = p.Name,
+			 Description = p.Description,
+			 Price = p.Price,
+			 Capacity = p.Capacity,
+			 Type = p.Type,
+			 ImageUrl = p.ImageUrl,
+			 IsActive = p.IsActive,
+			 OpenTime = p.OpenTime,
+			 CloseTime = p.CloseTime,
+			 IntervalMinutes = p.IntervalMinutes,
+			 CapacityPerSlot = p.CapacityPerSlot,
+			 Created = p.Created,
+			 LastUpdated = p.LastUpdated,
+			 ActiveFrom = p.ActiveFrom,
+			 ActiveTo = p.ActiveTo
+			}).ToList();
+
+			return Ok(dtos);
 		}
 
 		[HttpGet("{id}")]
@@ -44,6 +64,25 @@ namespace VedaVerk.Controllers
 			var product = await _productsRepository.GetByIdAsync(id);
 			if (product == null)
 				return NotFound();
+
+			var dtos = new ResponseProductDTO {
+			 Id = product.Id,
+			 Name = product.Name,
+			 Description = product.Description,
+			 Price = product.Price,
+			 Capacity = product.Capacity,
+			 Type = product.Type,
+			 ImageUrl = product.ImageUrl,
+			 IsActive = product.IsActive,
+			 OpenTime = product.OpenTime,
+			 CloseTime = product.CloseTime,
+			 IntervalMinutes = product.IntervalMinutes,
+			 CapacityPerSlot = product.CapacityPerSlot,
+			 Created = product.Created,
+			 LastUpdated = product.LastUpdated,
+			 ActiveFrom = product.ActiveFrom,
+			 ActiveTo =  product.ActiveTo
+			};
 
 			return Ok(product);
 		}

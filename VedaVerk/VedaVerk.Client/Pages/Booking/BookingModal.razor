@@ -139,9 +139,20 @@
     {
         if (Product != null)
         {
-            bookingModel.ProductId = Product.Id;
-            await LoadSlots();
+            if (bookingModel.ProductId != Product.Id)
+            {
+                bookingModel = new CreateBookingDTO
+                    {
+                        ProductId = Product.Id,
+                        Quantity = 1,
+                        BookingDate = selectedDate
+                    };
+            }
+
+            SelectedTime = null;
+            availableSlots = null;
         }
+        await LoadSlots();
     }
 
     private async Task LoadSlots()
@@ -173,18 +184,6 @@
 
         SelectedTime = slot.Time;
         bookingModel.BookingTime = selectedDate.Date.Add(slot.Time);
-    }
-
-    protected override void OnParametersSet()
-    {
-        if (Product != null)
-        {
-            bookingModel = new CreateBookingDTO
-            {
-                ProductId = Product.Id,
-                Quantity = 1
-            };
-        }
     }
 
     private async Task HandleBooking()
