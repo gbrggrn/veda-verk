@@ -115,7 +115,7 @@
         formModal.Open(product); // Pass null for Create, Product for Edit
     }
 
-    private async void OpenDetailsModal(ResponseProductDTO product)
+    private async Task OpenDetailsModal(ResponseProductDTO product)
     {
         await detailsModal.Open(product);
     }
