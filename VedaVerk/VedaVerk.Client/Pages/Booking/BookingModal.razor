@@ -108,9 +108,16 @@
                                     </div>
 
                                     <div class="mb-4" style="max-width: 150px;">
-                                        <label class="form-label small text-muted">Antal personer</label>
-                                        <InputNumber @bind-Value="bookingModel.Quantity" class="form-control" min="1" max="10" />
-                                        <ValidationMessage For="@(() => bookingModel.Quantity)" />
+                                        <div class="col-md-6">
+                                            <label class="form-label small text-muted">Antal personer</label>
+                                            <InputNumber @bind-Value="bookingModel.Quantity" class="form-control" min="1" max="10" />
+                                            <ValidationMessage For="@(() => bookingModel.Quantity)" />
+                                        </div class="col-md-6">
+                                            <label class="form-label small text-muted">Mobiltelefon</label>
+                                            <InputText @bind-Value="bookingModel.CustomerPhone" class="form-control" placeholder="0707770077" />
+                                            <ValidationMessage For="@(() => bookingModel.CustomerPhone)" />
+                                        <div>
+                                        </div>
                                     </div>
 
                                     <div class="d-grid">
