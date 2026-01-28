@@ -50,14 +50,28 @@
 
                             <div class="col-md-7 col-lg-8">
                                 <div class="p-2">
-                                    <h6 class="mb-3 fw-bold">1. Välj Datum & Tid</h6>
+                                    <label class="form-label small text-muted fw-bold text-uppercase mb-3">Välj Datum</label>
 
-                                    <div class="mb-3">
-                                        <input type="date" class="form-control"
-                                               value="@selectedDate.ToString("yyyy-MM-dd")"
-                                               min="@Product.ActiveFrom"
-											   max="@Product.ActiveTo"
-                                               @onchange="OnDateChanged" />
+                                    <div class="d-flex gap-2 overflow-auto pb-2" style="white-space: nowrap;">
+
+                                        @foreach (var date in GetDateRange())
+                                        {
+                                            <button type="button"
+                                                    class="btn @GetDateClass(date) border rounded-3 px-3 py-2 d-flex flex-column align-items-center"
+                                                    @onclick="() => SelectDate(date)"
+                                                    style="min-width: 70px;">
+
+                                                <small class="text-uppercase" style="font-size: 0.7rem;">
+                                                    @date.ToString("ddd", new System.Globalization.CultureInfo("sv-SE"))
+                                                </small>
+
+                                                <span class="fs-5 fw-bold lh-1">@date.Day</span>
+
+                                                <small style="font-size: 0.65rem;">
+                                                    @date.ToString("MMM", new System.Globalization.CultureInfo("sv-SE"))
+                                                </small>
+                                            </button>
+                                        }
                                     </div>
 
                                     <div class="mb-4">
@@ -107,16 +121,16 @@
                                         </div>
                                     </div>
 
-                                    <div class="mb-4" style="max-width: 150px;">
+                                    <div class="row g-2 mb-3">
                                         <div class="col-md-6">
-                                            <label class="form-label small text-muted">Antal personer</label>
-                                            <InputNumber @bind-Value="bookingModel.Quantity" class="form-control" min="1" max="10" />
+                                            <label class="form-label small text-muted">Antal</label>
+                                            <InputNumber @bind-Value="bookingModel.Quantity" class="form-control" min="1" max="@bookingModel.Quantity" />
                                             <ValidationMessage For="@(() => bookingModel.Quantity)" />
-                                        </div class="col-md-6">
+                                        </div>
+                                        <div class="col-md-6">
                                             <label class="form-label small text-muted">Mobiltelefon</label>
                                             <InputText @bind-Value="bookingModel.CustomerPhone" class="form-control" placeholder="0707770077" />
                                             <ValidationMessage For="@(() => bookingModel.CustomerPhone)" />
-                                        <div>
                                         </div>
                                     </div>
 
@@ -172,18 +186,46 @@
         availableSlots = await BookingService.GetAvailableSlotsAsync(Product.Id, selectedDate);
     }
 
-    private async Task OnDateChanged(ChangeEventArgs e)
+    private void SelectDate(DateTime date)
     {
-        if (DateTime.TryParse(e.Value?.ToString(), out var newDate))
+        selectedDate = date;
+        bookingModel.BookingDate = date;
+
+        SelectedTime = null;
+        bookingModel.BookingTime = default;
+
+        _ = LoadSlots();
+    }
+
+    private IEnumerable<DateTime> GetDateRange()
+    {
+        if (Product == null)
+            yield break;
+
+        var start = Product.ActiveFrom > DateTime.Today
+            ? Product.ActiveFrom // Start from product start date
+            : DateTime.Today; // Start from today
+
+        var end = Product.ActiveTo;
+
+        var effectiveEnd = end > start.AddDays(30) ? start.AddDays(30) : Product.ActiveTo;
+
+        for (var date = start; date <= effectiveEnd; date = date.AddDays(1))
         {
-            selectedDate = newDate;
-            bookingModel.BookingDate = newDate;
-
-            SelectedTime = null;
-            bookingModel.BookingTime = default;
-
-            await LoadSlots();
+            yield return date;
         }
+    }
+
+    private string GetDateClass(DateTime date)
+    {
+        if (date.Date == selectedDate.Date)
+        {
+            // When btn is selected
+            return "btn-primary text-white shadow";
+        }
+
+        // When btn is not selected
+        return "btn-outline-secondary border-opacity-25 bg-white text-dark";
     }
 
     private void SelectSlot(TimeSlotDTO slot)
