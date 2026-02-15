@@ -145,7 +145,12 @@ h1:focus {
     color: #214E34;
     font-weight: bold;
     font-family: 'Work Sans';
+    transition: transform 0.2s ease;
 }
+    
+    .btn-veda-verk:hover {
+        transform: scale(1.05);
+    }
 
 .category-card {
     position: relative;
@@ -176,4 +181,18 @@ h1:focus {
         background: transparent;
         padding: 15px;
         text-align: center;
+    }
+
+.product-card {
+    position: relative;
+    cursor: auto;
+    transition: transform 0.3s ease, z-index 0s;
+    border-radius: 1px;
+    background-color: #C1BCAC;
+    height: 100%;
+}
+
+    .product-card:hover {
+        transform: scale(1.02);
+        z-index: 10;
     }
