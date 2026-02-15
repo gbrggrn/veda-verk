@@ -30,30 +30,30 @@
 
             <!-- Footer nav -->
             <div class="footer-nav mb-3 d-flex justify-content-center gap-3 flex-wrap">
-                <NavLink href="" class="text-dark text-decoration-none">Home</NavLink>
-                <NavLink href="" class="text-dark text-decoration-none">About</NavLink>
-                <NavLink href="" class="text-dark text-decoration-none">Contact</NavLink>
+                <NavLink href="" class="footer-text text-decoration-none">Home</NavLink>
+                <NavLink href="" class="footer-text text-decoration-none">About</NavLink>
+                <NavLink href="" class="footer-text text-decoration-none">Contact</NavLink>
 
                 <AuthorizeView>
                     <Authorized>
-                        <NavLink href="admin/dashboard" class="text-dark text-decoration-none">Dashboard</NavLink>
+                        <NavLink href="admin/dashboard" class="footer-text text-decoration-none">Dashboard</NavLink>
                         <form action="Account/Logout" method="post" class="d-inline">
                             <AntiforgeryToken />
                             <input type="hidden" name="ReturnUrl" value="" />
-                            <button type="submit" class="text-dark text-decoration-none bg-transparent border-0 p-0">
+                            <button type="submit" class="footer-text text-decoration-none bg-transparent border-0 p-0">
                                 Logout
                             </button>
                         </form>
                     </Authorized>
                     <NotAuthorized>
-                        <a href="Account/Login" class="text-dark text-decoration-none" target="_top">Login</a>
+                        <a href="Account/Login" class="footer-text text-decoration-none" target="_top">Login</a>
                     </NotAuthorized>
                 </AuthorizeView>
 
             </div>
 
             <!-- Date -->
-            <div class="text-muted small">
+            <div class="footer-text small">
                 &copy; @DateTime.Now.Year Veda Verk
             </div>
         </div>

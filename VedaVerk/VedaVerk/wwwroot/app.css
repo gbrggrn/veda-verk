@@ -140,6 +140,13 @@ h1:focus {
     font-family: 'Work Sans';
 }
 
+.btn-veda-verk {
+    background-color: #979B8D;
+    color: #214E34;
+    font-weight: bold;
+    font-family: 'Work Sans';
+}
+
 .category-card {
     position: relative;
     cursor: pointer;

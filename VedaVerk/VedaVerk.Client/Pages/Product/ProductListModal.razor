@@ -1,9 +1,9 @@
 ﻿@if (IsVisible)
 {
-    <div class="modal show d-block animate-fade-in" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal show d-block animate-fade-in" style="background-color: #C1BCAC">
         <div class="modal-dialog modal-lg modal-dialog-scrollable animate-zoom-in"> <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">@CategoryName</h5>
+                    <h5 class="modal-title title-text">@CategoryName</h5>
                     <button type="button" class="btn-close" @onclick="OnClose"></button>
                 </div>
                 
@@ -22,7 +22,7 @@
                     }
                     else
                     {
-                        <p class="text-center text-muted">Inga produkter tillgängliga just nu.</p>
+                        <p class="text-center sub-title-text text-muted">Inga produkter tillgängliga just nu.</p>
                     }
                 </div>
             </div>
