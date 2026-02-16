@@ -152,6 +152,38 @@ h1:focus {
         transform: scale(1.05);
     }
 
+.btn-veda-inactive {
+    background-color: #979B8D;
+    border-color: #214E34;
+    color: #979B8D;
+    opacity: 0.4;
+}
+
+.btn-veda-available {
+    background-color: #979B8D;
+    border-color: #214E34;
+    color: #214E34;
+    transition: transform 0.2s ease;
+}
+
+.btn-veda-active {
+    background-color: #214E34;
+    border-color: #979B8D;
+    color: #979B8D;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.btn-veda-outline {
+    border: 1px solid #979B8D;
+    color: #979B8D;
+}
+
+    .btn-veda-outline:hover {
+        background-color: #979B8D;
+        color: #979B8D;
+    }
+
 .category-card {
     position: relative;
     cursor: pointer;
