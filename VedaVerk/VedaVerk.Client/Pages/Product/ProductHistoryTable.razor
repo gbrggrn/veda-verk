@@ -4,7 +4,7 @@
 }
 else if (!Products.Any())
 {
-    <div class="alert alert-light text-center">
+    <div class="alert sub-title-text text-center">
         Ingen historik att visa i denna kategori.
     </div>
 }
@@ -12,22 +12,22 @@ else
 {
     <div class="table-responsive">
         <table class="table table-hover align-middle">
-            <thead class="table-light">
+            <thead style="background-color: #979B8D;">
                 <tr>
-                    <th>Namn</th>
-                    <th>Datum</th>
-                    <th>Pris</th>
-                    <th class="text-end">Åtgärder</th>
+                    <th class="title-text">Namn</th>
+                    <th class="title-text">Datum</th>
+                    <th class="title-text">Pris</th>
+                    <th class="text-end title-text">Åtgärder</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var product in Products.OrderByDescending(p => p.ActiveFrom))
                 {
                     <tr>
-                        <td class="fw-bold">@product.Name</td>
-                        <td>@product.ActiveFrom.ToString("yyyy-MM-dd")</td>
-                        <td>@product.ActiveTo.ToString("yyyy-MM-dd")</td>
-                        <td>@product.Price kr</td>
+                        <td class="fw-bold title-text">@product.Name</td>
+                        <td class="title-text">@product.ActiveFrom.ToString("yyyy-MM-dd")</td>
+                        <td class="title-text">@product.ActiveTo.ToString("yyyy-MM-dd")</td>
+                        <td class="title-text">@product.Price kr</td>
 
                         <td class="text-end">
                             <div class="btn-group btn-group-sm">

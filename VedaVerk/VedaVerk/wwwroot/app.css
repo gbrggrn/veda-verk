@@ -157,6 +157,7 @@ h1:focus {
     border-color: #214E34;
     color: #979B8D;
     opacity: 0.4;
+    font-family: 'Work Sans';
 }
 
 .btn-veda-available {
@@ -164,6 +165,7 @@ h1:focus {
     border-color: #214E34;
     color: #214E34;
     transition: transform 0.2s ease;
+    font-family: 'Work Sans' !important;
 }
 
 .btn-veda-active {
@@ -172,16 +174,19 @@ h1:focus {
     color: #979B8D;
     box-shadow: none !important;
     outline: none !important;
+    font-family: 'Work Sans' !important;
 }
 
 .btn-veda-outline {
     border: 1px solid #979B8D;
     color: #979B8D;
+    font-family: 'Work Sans' !important;
 }
 
     .btn-veda-outline:hover {
         background-color: #979B8D;
         color: #979B8D;
+        font-family: 'Work Sans' !important;
     }
 
 .category-card {
