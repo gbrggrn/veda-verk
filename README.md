@@ -11,7 +11,7 @@
 ## Systems Architechture
 
 * **Logic** Blazor Server + Client + Shared
-* **Tech Stack** C# + .NET + Blazor + Web API + EF Core + SQLite + Identity Core
+* **Tech Stack** C# + .NET + Blazor + EF Core + SQLite + Identity Core
 
 ---
 
