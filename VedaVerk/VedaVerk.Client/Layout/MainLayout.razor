@@ -13,7 +13,7 @@
             <div class="social-links mb-3">
 
                 <!-- Github -->
-                <a href="http://github.com/gbrggrn" target="_blank" class="social-icon mx-2" style="color: #214E34;">
+                <a href="https://github.com/gbrggrn/csharp-blazor-veda-verk" target="_blank" class="social-icon mx-2" style="color: #214E34;">
                     <i class="bi bi-github display-6 fs-2"></i>
                 </a>
 
@@ -33,10 +33,11 @@
                 <NavLink href="" class="footer-text text-decoration-none">Home</NavLink>
                 <NavLink href="" class="footer-text text-decoration-none">About</NavLink>
                 <NavLink href="" class="footer-text text-decoration-none">Contact</NavLink>
+                <NavLink href="" class="footer-text text-decoration-none">Privacy</NavLink>
 
                 <AuthorizeView>
                     <Authorized>
-                        <NavLink href="admin/dashboard" class="footer-text text-decoration-none">Dashboard</NavLink>
+                        <NavLink href="Admin/Dashboard" class="footer-text text-decoration-none">Dashboard</NavLink>
                         <form action="Account/Logout" method="post" class="d-inline">
                             <AntiforgeryToken />
                             <input type="hidden" name="ReturnUrl" value="" />
