@@ -233,3 +233,10 @@ h1:focus {
         transform: scale(1.02);
         z-index: 10;
     }
+
+.privacy-card {
+    position: relative;
+    cursor: auto;
+    border-radius: 0px;
+    background-color: #C1BCAC;
+}
