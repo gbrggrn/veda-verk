@@ -41,8 +41,8 @@
                                         </div>
 
                                         <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
-                                            <span class="fw-bold card-text">Pris totalt:</span>
-                                            <span class="fs-4 fw-bold card-text">@Product.Price kr</span>
+                                            <span class="card-text">Pris totalt:</span>
+                                            <span class="fs-4 card-text">@Product.Price kr</span>
                                         </div>
                                     </div>
                                 </div>
@@ -103,30 +103,30 @@
                                         <ValidationMessage For="@(() => bookingModel.BookingTime)" />
                                     </div>
 
-                                    <h6 class="mb-3 fw-bold title-text border-top pt-3">Dina Uppgifter</h6>
+                                    <h6 class="mb-3 fs-4 card-text border-top pt-3">Dina Uppgifter</h6>
 
                                     <div class="row g-2 mb-3">
                                         <div class="col-md-6">
-                                            <label class="form-label small sub-title-text">Namn</label>
-                                            <InputText @bind-Value="bookingModel.CustomerName" class="form-control" placeholder="Förnamn Efternamn" />
+                                            <label class="form-label small card-text">Namn</label>
+                                            <InputText @bind-Value="bookingModel.CustomerName" class="form-control veda-input-field" placeholder="Förnamn Efternamn" />
                                             <ValidationMessage For="@(() => bookingModel.CustomerName)" />
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label small sub-title-text">Email</label>
-                                            <InputText @bind-Value="bookingModel.CustomerEmail" class="form-control" placeholder="namn@exempel.se" />
+                                            <label class="form-label small card-text">Email</label>
+                                            <InputText @bind-Value="bookingModel.CustomerEmail" class="form-control veda-input-field" placeholder="namn@exempel.se" />
                                             <ValidationMessage For="@(() => bookingModel.CustomerEmail)" />
                                         </div>
                                     </div>
 
                                     <div class="row g-2 mb-3">
                                         <div class="col-md-6">
-                                            <label class="form-label small sub-title-text">Antal</label>
-                                            <InputNumber @bind-Value="bookingModel.Quantity" class="form-control" min="1" max="@bookingModel.Quantity" />
+                                            <label class="form-label small card-text">Antal</label>
+                                            <InputNumber @bind-Value="bookingModel.Quantity" class="form-control veda-input-field" min="1" max="@bookingModel.Quantity" />
                                             <ValidationMessage For="@(() => bookingModel.Quantity)" />
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label small sub-title-text">Mobiltelefon</label>
-                                            <InputText @bind-Value="bookingModel.CustomerPhone" class="form-control" placeholder="0707770077" />
+                                            <label class="form-label small card-text">Mobiltelefon</label>
+                                            <InputText @bind-Value="bookingModel.CustomerPhone" class="form-control veda-input-field" placeholder="0707770077" />
                                             <ValidationMessage For="@(() => bookingModel.CustomerPhone)" />
                                         </div>
                                     </div>

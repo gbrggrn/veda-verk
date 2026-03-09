@@ -302,3 +302,7 @@ h1:focus {
     border: none;
 
 }
+
+.veda-input-field {
+    border-color: #4D781C;
+}
