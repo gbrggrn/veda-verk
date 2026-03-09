@@ -141,7 +141,7 @@ h1:focus {
 }
 
 .card-text {
-    color: #214E34;
+    color: #333333;
     font-family: 'Work Sans';
 }
 
@@ -194,13 +194,50 @@ h1:focus {
         font-family: 'Work Sans' !important;
     }
 
+.card-header {
+    border-radius: 0px;
+    background-color: transparent;
+    border-bottom: 0px;
+    text-align: center;
+}
+
+.card-body {
+    border-radius: 0px;
+    background-color: transparent;
+}
+
+.card-footer {
+    border-radius: 0px;
+    background-color: transparent;
+    border-top: 0px;
+    text-align: center;
+}
+
+.homep-btn {
+    min-width: 300px;
+    min-height: 50px;
+    border-radius: 50px;
+    border:none;
+    color: white;
+    background-color: #4D781C;
+    text-align: center;
+    font-family: 'Work Sans';
+    font-size: large;
+    box-shadow: none;
+    transition: transform 0.3s ease;
+}
+
+    .homep-btn:hover {
+        transform: scale(1.02);
+    }
+
 .category-card {
     position: relative;
-    cursor: pointer;
+    cursor: auto;
     overflow: hidden;
     transition: transform 0.3s ease;
     border-radius: 0px;
-    height: 275px;
+    height: 100%;
     background-color: transparent;
 }
 
