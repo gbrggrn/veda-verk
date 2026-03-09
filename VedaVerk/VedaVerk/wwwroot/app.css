@@ -245,6 +245,10 @@ h1:focus {
         transform: scale(1.02);
     }
 
+    .homep-btn:disabled {
+        opacity: 50%;
+    }
+
 .category-card {
     position: relative;
     cursor: auto;
