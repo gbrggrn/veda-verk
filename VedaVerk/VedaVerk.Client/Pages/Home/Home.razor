@@ -21,16 +21,26 @@
 				<div class="card-footer">
 					<button type="button"
 						class="homep-btn"
-						@onclick="() => OpenCategory(ProductType.VegBag)">Boka Grönsakskasse</button>
+						@onclick="() => OpenCategory(ProductType.VegBag)">Boka Grönsakskasse
+					</button>
 				</div>
 			</div>
 		</div>
 
 		<div class="col-md-4">
-			<div class="category-card" @onclick="() => OpenCategory(ProductType.Pizza)">
-				<img src="/images/veda-verk-pizza.png" class="img-fluid rounded" />
-				<div class="overlay">
-					<h4 class="card-text">Pizza</h4>
+			<div class="category-card">
+				<div class="card-header">
+					<h2 class="card-text">Pizza</h2>
+					<p class="card-text">Beställ vedugnsbakad pizza</p>
+				</div>
+				<div class="card-body">
+					<img src="/images/veda-verk-pizza.png" class="img-fluid rounded" />
+				</div>
+				<div class="card-footer">
+					<button type="button"
+							class="homep-btn"
+							@onclick="() => OpenCategory(ProductType.Pizza)"> Beställ Pizza
+					</button>
 				</div>
 			</div>
 		</div>
