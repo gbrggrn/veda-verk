@@ -4,7 +4,7 @@
 {
     <div class="modal show d-block animate-fade-in" style="background-color: rgba(0,0,0,0.5);">
         <div class="modal-dialog modal-xl animate-zoom-in">
-            <div class="modal-content" style="background-color: #F5F3EA">
+            <div class="modal-content" style="background-color: #FFFFFF">
                 <div class="modal-header border-bottom-0">
                     <h5 class="modal-title card-text fs-3">Bokning</h5>
                     <button type="button" class="btn-close" @onclick="OnClose"></button>
@@ -17,7 +17,7 @@
                         <div class="row g-4">
 
                             <div class="col-md-5 col-lg-4">
-                                <div class="card border-0 h-100" style="background-color: #FFFFFF">
+                                <div class="card border-0 h-100" style="background-color: #F5F3EA">
                                     @if (!string.IsNullOrEmpty(Product.ImageUrl))
                                     {
                                         <img src="@Product.ImageUrl" class="card-img-top" style="height: 150px; object-fit: cover;" alt="@Product.Name">
@@ -50,7 +50,7 @@
 
                             <div class="col-md-7 col-lg-8">
                                 <div class="p-2">
-                                    <label class="form-label small card-text fs-4 mb-3">Välj Datum</label>
+                                    <label class="form-label card-text fs-4 mb-3">1. Välj datum</label>
                                     
                                     <div class="d-flex gap-2 overflow-auto pb-2" style="white-space: nowrap;">
 
@@ -61,13 +61,13 @@
                                                     @onclick="() => SelectDate(date)"
                                                     style="min-width: 70px;">
 
-                                                <small class="text-uppercase sub-title-text" style="font-size: 0.7rem;">
+                                                <small class="text-uppercase card-text" style="font-size: 0.7rem;">
                                                     @date.ToString("ddd", new System.Globalization.CultureInfo("sv-SE"))
                                                 </small>
 
                                                 <span class="fs-5 fw-bold lh-1">@date.Day</span>
 
-                                                <small class="sub-title-text" style="font-size: 0.65rem;">
+                                                <small class="card-text" style="font-size: 0.65rem;">
                                                     @date.ToString("MMM", new System.Globalization.CultureInfo("sv-SE"))
                                                 </small>
                                             </button>
@@ -103,7 +103,7 @@
                                         <ValidationMessage For="@(() => bookingModel.BookingTime)" />
                                     </div>
 
-                                    <h6 class="mb-3 fs-4 card-text border-top pt-3">Dina Uppgifter</h6>
+                                    <label class="form-label card-text fs-4 mb-3 border-top">1. Dina uppgifter</label>
 
                                     <div class="row g-2 mb-3">
                                         <div class="col-md-6">
@@ -218,7 +218,7 @@
         if (date.Date == selectedDate.Date)
         {
             // When btn is selected
-            return "btn-veda-active shadow";
+            return "btn-veda-active";
         }
 
         // When btn is not selected
