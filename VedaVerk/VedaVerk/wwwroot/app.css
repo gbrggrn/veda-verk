@@ -160,17 +160,19 @@ h1:focus {
     }
 
 .btn-veda-inactive {
-    background-color: #979B8D;
-    border-color: #214E34;
-    color: #979B8D;
+    background-color: #F5F3EA;
+    border-color: #4D781C;
+    border-radius: 30%;
+    color: #333333;
     opacity: 0.4;
     font-family: 'Work Sans';
 }
 
 .btn-veda-available {
-    background-color: #979B8D;
-    border-color: #214E34;
-    color: #214E34;
+    background-color: #F5F3EA;
+    border-color: #4D781C;
+    border-radius: 30%;
+    color: #333333;
     transition: transform 0.2s ease;
     font-family: 'Work Sans' !important;
 }

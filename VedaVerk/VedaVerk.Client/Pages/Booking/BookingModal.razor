@@ -244,7 +244,7 @@
     private string GetButtonClass(TimeSlotDTO slot)
     {
         if (!slot.IsAvailable) return "btn-veda-inactive";
-        if (SelectedTime == slot.Time) return "btn-veda-active shadow-none";
+        if (SelectedTime == slot.Time) return "btn-veda-available";
         return "btn-veda-available";
     }
 }
