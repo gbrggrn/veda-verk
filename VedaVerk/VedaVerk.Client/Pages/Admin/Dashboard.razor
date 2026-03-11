@@ -14,19 +14,19 @@
         </button>
     </div>
 
-    <h4 class="mb-3 title-text">Aktiva Produkter</h4>
+    <h4 class="mb-3 card-text">Aktiva Produkter</h4>
     <div class="row g-4 mb-5">
         @foreach (var product in ActiveProducts)
         {
             <div class="col-md-4">
                 <div class="category-card h-100 shadow-sm">
-                    <div class="card-header title-text d-flex justify-content-between" style="background-color: #979B8D;">
-                        <span class="fw-bold text-title">@product.Type</span>
-                        <span class="badge title-text" style="background-color: #5C7457;">Aktiv</span>
+                    <div class="card-header title-text d-flex justify-content-between" style="background-color: #F5F3EA;">
+                        <span class="card-text fw-bold">@product.Type</span>
+                        <span class="badge card-text text-white" style="background-color: #4D781C;">Aktiv</span>
                     </div>
                     <div class="card-body">
                         <h5 class="card-title text-title">@product.Name</h5>
-                        <p class="card-text sub-title-text">@product.Description.Substring(0, Math.Min(50, product.Description.Length))...</p>
+                        <p class="card-text text-muted">@product.Description.Substring(0, Math.Min(50, product.Description.Length))...</p>
                         
                         <div class="d-grid gap-2">
                             <button class="btn btn-veda-verk" @onclick="() => OpenDetailsModal(product)">
@@ -42,9 +42,9 @@
         }
     </div>
 
-    <h4 class="mb-3 title-text">Historik & Arkiv</h4>
+    <h4 class="mb-3 card-text">Historik & Arkiv</h4>
     
-    <ul class="nav nav-tabs" style="background-color: #979B8D;">
+    <ul class="nav nav-tabs" style="background-color: #F5F3EA;">
         <li class="nav-item">
             <a class="nav-link title-text text-decoration-none @(activeTab == "courses" ? "active" : "")"
                @onclick='() => activeTab = "courses"'
@@ -62,7 +62,7 @@
         </li>
     </ul>
 
-    <div class="tab-content border border-top-0 p-3" style="background-color: #979B8D;">
+    <div class="tab-content border border-top-0 p-3" style="background-color: #F5F3EA;">
         @if (activeTab == "courses")
         {
             <ProductHistoryTable Products="CourseHistory" OnEdit="OpenFormModal" OnDelete="DeleteProduct" />
