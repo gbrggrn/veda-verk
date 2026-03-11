@@ -1,6 +1,7 @@
 # Veda Verk
 
 ![Veda Verk Homepage](/readme-img/veda-verk-homep.png)
+![Veda Verk Dashboard](/readme-img/veda-verk-dashboard.png)
 
 ## Context
 
